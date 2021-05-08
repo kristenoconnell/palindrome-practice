@@ -1,38 +1,40 @@
+//given a string, assess whether any anagram of that string is a palindrome
 
-//i misunderstood the problem but i'm proud of this algo:
-
-//assess whether a given word is a palindrome given the current order of the word
-//using Maps as a data structure 
-function permutation(word) {
- const index = Math.floor((word.length - 1)/2);
-  let firstHalf;
-  let secondHalf;
-  //if word is even
-  //split at index
-    if (word.length%2 === 0) {
-      firstHalf = word.slice(0, index+1);
-      secondHalf = word.slice(index+1, word.length);
-    } 
-  //if word is odd
-  //split at index but ignore the letter at index
-  if (word.length%2 !== 0) {
-      firstHalf = word.slice(0, index);
-      secondHalf = word.slice(index+1, word.length);
+function permutationPalindrome(word) {
+    //find half index (math.floor)
+    //splice word in half at index
+    //if word is uneven ignore the middle index and make second half index+! to end
+   
+    const map = new Map();
+    for (let letter of word) {
+      if (map.has(letter)) {
+        //if the letter exists
+        //add one to the current value
+        let currentValue = map.get(letter);
+        map.set(letter, (currentValue + 1));
+      }
+      //if the letter does not exist, add at value 1
+      if (!map.has(letter)) {
+        map.set(letter, 1);
+      }
     }
-    
-  let firstMap = new Map();
-  let secondMap = new Map();
-  
-  for (let i = 0; i < firstHalf.length; i++){
-    firstMap.set(i, firstHalf[i]);
+    //if value is even, delete letter
+    for (let [letter, value] of map) {
+      if (value%2 === 0) {
+        map.delete(letter);
+      }
+    }
+    //if word is even and map is empty, true
+    if (word.length%2===0) {
+      if (map.size === 0) {
+        return true;
+      }
+    }
+    //if word is odd and map has one letter, true
+    if (word.length%2 !==0) {
+      if (map.size === 1) {
+        return true;
+      }
+    }
+    return false;
   }
-  for (let i = 0; i < secondHalf.length; i++) {
-    secondMap.set(i, secondHalf[i]);
-  }
-  console.log("firstHalf:", firstHalf);
-  console.log("firstMap:", firstMap);
-  console.log("secondHalf:", secondHalf);
-  console.log("secondMap:", secondMap)
-  
-  //then reverse the index to see if they match
-}
